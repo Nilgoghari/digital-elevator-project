@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Elevator Project</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            background-color: #12121e; color: #ffffff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            text-align: center; margin: 0; padding: 20px;
+        }
+        .header h2 { color: #00ffcc; margin-bottom: 5px; }
+        .header p { color: #8a8aa3; margin-top: 0; }
+        
+        .container {
+            display: flex; justify-content: center; align-items: center;
+            gap: 40px; flex-wrap: wrap; margin-top: 30px;
+        }
+
+        /* Elevator Shaft Visual */
+        .shaft {
+            width: 140px; height: 400px;
+            border: 3px solid #00ffcc; border-radius: 8px;
+            position: relative; background-color: #1a1a2b;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
+        }
+        .floor-divider {
+            height: 80px; border-bottom: 1px dashed #33334d; width: 100%;
+        }
+        .lift-box {
+            width: 120px; height: 70px;
+            background: linear-gradient(135deg, #00ffcc, #00b386);
+            position: absolute; left: 7px; border-radius: 6px;
+            transition: bottom 0.8s ease-in-out;
+            display: flex; justify-content: center; align-items: center;
+            color: #000000; font-weight: bold; font-size: 18px;
+            box-shadow: 0 0 10px #00ffcc;
+        }
+
+        /* Floor Positions in CSS (No inline styles = Zero VS Code Errors) */
+        .pos-0 { bottom: 5px; }
+        .pos-1 { bottom: 85px; }
+        .pos-2 { bottom: 165px; }
+        .pos-3 { bottom: 245px; }
+        .pos-4 { bottom: 325px; }
+
+        /* Display & Control Panel */
+        .panel {
+            background: #1a1a2b; padding: 25px; border-radius: 12px;
+            border: 1px solid #2a2a40; min-width: 280px;
+        }
+        .seven-segment {
+            display: grid;
+            grid-template-columns: 15px 60px 15px;
+            grid-template-rows: 15px 60px 15px 60px 15px;
+            gap: 4px; margin: 20px auto; width: fit-content;
+        }
+        .segment { background-color: #26263a; border-radius: 4px; }
+        .seg-a { grid-column: 2; grid-row: 1; }
+        .seg-b { grid-column: 3; grid-row: 2; }
+        .seg-c { grid-column: 3; grid-row: 4; }
+        .seg-d { grid-column: 2; grid-row: 5; }
+        .seg-e { grid-column: 1; grid-row: 4; }
+        .seg-f { grid-column: 1; grid-row: 2; }
+        .seg-g { grid-column: 2; grid-row: 3; }
+        .on { background-color: #ff0055; box-shadow: 0 0 12px #ff0055; }
+
+        .btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+        .btn {
+            padding: 12px; font-size: 16px; font-weight: bold;
+            cursor: pointer; border: 1px solid #33334d; border-radius: 6px;
+            background-color: #26263a; color: white; transition: 0.2s; width: 100%;
+        }
+        .btn:hover { background-color: #33334d; border-color: #00ffcc; }
+        .btn-active { background-color: #00ffcc; color: #000000; border-color: #00ffcc; }
+        form { margin: 0; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h2>Digital Elevator Controller</h2>
+        <p>Digital Electronics Project: Encoder & 7-Segment Decoder</p>
+    </div>
+
+    <div class="container">
+        <!-- Visual Lift Box -->
+        <div class="shaft">
+            <div class="lift-box pos-{{ floor }}">
+                {% if floor == 0 %} Ground {% else %} Floor {{ floor }} {% endif %}
+            </div>
+            <div class="floor-divider"></div>
+            <div class="floor-divider"></div>
+            <div class="floor-divider"></div>
+            <div class="floor-divider"></div>
+            <div class="floor-divider" style="border: none;"></div>
+        </div>
+
+        <!-- Right Side Control Panel -->
+        <div class="panel">
+            <h3 style="margin: 0; color: #8a8aa3; font-size: 14px;">7-SEGMENT DISPLAY</h3>
+            
+            <div class="seven-segment">
+                <div class="segment seg-a {{ segments[0] }}"></div>
+                <div class="segment seg-b {{ segments[1] }}"></div>
+                <div class="segment seg-c {{ segments[2] }}"></div>
+                <div class="segment seg-d {{ segments[3] }}"></div>
+                <div class="segment seg-e {{ segments[4] }}"></div>
+                <div class="segment seg-f {{ segments[5] }}"></div>
+                <div class="segment seg-g {{ segments[6] }}"></div>
+            </div>
+
+            <h3 style="margin: 15px 0 5px 0; color: #8a8aa3; font-size: 14px;">CALL ELEVATOR</h3>
+            
+            <div class="btn-group">
+                <form action="/move/4" method="POST"><button type="submit" class="btn {{ 'btn-active' if floor == 4 else '' }}">Floor 4</button></form>
+                <form action="/move/3" method="POST"><button type="submit" class="btn {{ 'btn-active' if floor == 3 else '' }}">Floor 3</button></form>
+                <form action="/move/2" method="POST"><button type="submit" class="btn {{ 'btn-active' if floor == 2 else '' }}">Floor 2</button></form>
+                <form action="/move/1" method="POST"><button type="submit" class="btn {{ 'btn-active' if floor == 1 else '' }}">Floor 1</button></form>
+                <form action="/move/0" method="POST"><button type="submit" class="btn {{ 'btn-active' if floor == 0 else '' }}">Ground (0)</button></form>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
